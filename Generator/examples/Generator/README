@@ -50,3 +50,15 @@ cube_d.cpp
 grid_d.cpp                       
     generates points on a grid in dim d.
 
+random_orthogonal_polygons1.cpp
+    creates two 64-vertex orthogonal polygons with the same grid orthogonal polygon, which is created as well.    
+
+random_orthogonal_polygons2.cpp
+    creates 100 orthogonal polygons with the same grid orthogonal polygon, which is created as well.
+
+random_thin_grid_ogons.cpp
+    creates 100 path grid ogons (a.k.a. thin grid ogons) with the same number of vertices.
+
+random_column_convex_ogons.cpp
+    creates 100 column-convex orthogonal polygons.
+

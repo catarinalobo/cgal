@@ -6,7 +6,7 @@ namespace CGAL {
 \anchor Chapter_Geometric_Object_Generators
 \anchor chapterGenerators
 \cgalAutoToc
-\authors Pedro M. M. de Castro, Olivier Devillers, Susan Hert, Michael Hoffmann, Lutz Kettner, Sven Sch&ouml;nherr, Alexandru Tifrea, and Maxime Gimeno
+\authors Pedro M. M. de Castro, Olivier Devillers, Susan Hert, Michael Hoffmann, Lutz Kettner, Sven Sch&ouml;nherr, Alexandru Tifrea, Maxime Gimeno, Catarina Lobo Ferreira, and Ana Paula Tom&aacute;s 
 
 \section GeneratorIntroduction Introduction
 
@@ -58,11 +58,12 @@ For generating grid points, we provide the function
 `points_on_cube_grid_d()` that writes to
 an output iterator.
 
-We also provide two functions for generating more complex geometric objects.
+We also provide functions for generating more complex geometric objects.
 The function `random_convex_set_2()` computes a random convex planar
 point set of a given size where the points are drawn from a specific
 domain and `random_polygon_2()` generates a random simple polygon from
-points drawn from a specific domain. The function `random_convex_hull_in_disc_2()` computes a random polygon as a convex hull from uniformly generated random points in a disc.
+points drawn from a specific domain. The function `random_convex_hull_in_disc_2()` computes a random polygon as a convex hull from uniformly generated random points in a disc. There are functions to generate simple orthogonal polygons (abbreviated as ogons) and specific subclasses. The functions `random_grid_ogon_2()` and `random_ogon_2()` generate grid orthogonal polygons (see section \ref OgonsGeneratorGrid) and orthogonal polygons, respectively. The available subclasses are row-convex, column-convex, convex, path and spiral (grid) orthogonal polygons (see section \ref OgonsGeneratorSubclasses). The functions that provide these subclasses are named `random_grid_?_ogon_2()` and `random_?_ogon_2()`, where `?` is the name of the subclass we want to generate. There is still another function, `random_ogon_from_grid_ogon_2()`, that creates orthogonal polygons from a grid ogon already created.
+
 
 \subsection GeneratorRandomPerturbations Random Perturbations
 
@@ -90,6 +91,35 @@ The class `Combination_enumerator<CombinationElement>` is used to enumerate
 all fixed-size combinations (subsets) of a range of elements. It is useful
 in the context of high-dimensional triangulations, e.g., for enumerating the
 faces of a simplex.
+
+\subsection OgonsGeneratorGrid Grid Orthogonal Polygons
+
+The functions that generate orthogonal polygons use grid orthogonal polygons to create the orthogonal polygons. Grid orthogonal polygons (grid ogons, for short) are simple orthogonal polygons without collinear edges, defined in a unit square lattice and that have exactly one edge on all the grid lines that intersect their minimum bounding square. An orthogonal polygon can be easily obtained from a grid ogon by sliding its edges, in such a way that the order of the edges defined by a planar sweep is kept (see \cgalFigureRef{figureOgonGridOgon} as example). Therefore, the functions `random_ogon_2()` and `random_?_ogon_2()` generate a grid ogon before creating an orthogonal polygon. Orthogonal polygons with collinear edges are considered as well. There is a final transformation that yields collinear edges, by making use of a parameter that defines the probability of moving an edge to the same line of the previous one (if that is possible).
+
+\cgalFigureBegin{figureOgonGridOgon,gridogon_ogon.png}
+An orthogonal polygon that can be obtained from the grid orthogonal polygon in the right.
+\cgalFigureEnd
+
+\subsection OgonsGeneratorSubclasses Subclasses of Orthogonal Polygons
+
+This section gives the definitions of the subclasses of orthogonal polygons that this package can provide. \cgalFigureRef{figureOgonSubclasses} has an example of each mentioned subclasses.
+
+\cgalFigureBegin{figureOgonSubclasses,ogon_subclasses.png}
+Instances of subclasses of orthogonal polygons: (a) row-convex; (b) column-convex; (c) convex; (d) path; (e) spiral.
+\cgalFigureEnd
+
+(a) An orthogonal polygon is row-convex if it is monotone with respect to a vertical line. An orthogonal polygon is monotone w.r.t. a line L if its intersection with any line L' perpendicular to L has at most one connected component (i.e., it is a segment, a point or an empty set).
+
+(b) An orthogonal polygon is column-convex if it is monotone with respect to an horizontal line.
+
+(c) A convex orthogonal polygon is an orthogonal polygon that is both row-convex and column-convex.
+
+(d) A path orthogonal polygon is an orthogonal polygon for which the dual graph of its rectilinear partition is a path graph. The rectilinear partition is obtained by adding all the rectilinear (horizontal and vertical) cuts (or chords) incident to the reflex vertices of the polygon.
+This means that we extend all edges towards the interior of the polygon until they reach the boundary again. The dual graph of the partition is a graph
+whose vertices correspond to its pieces (faces of the decomposition) and whose edges connect pieces that share an edge.
+
+(e) A spiral orthogonal polygon is an orthogonal polygon whose boundary can be divided into two chains, a reflex and a convex vertex chain.
+
 
 \section GeneratorExample_1 Example Generating Degenerate Point Sets
 
@@ -249,6 +279,18 @@ in an array of strings.
 
 \cgalExample{Generator/name_pairs.cpp}
 
+\section GeneratorExGenOgons Example Generating Orthogonal Polygons
+
+The following example creates two 64-vertex orthogonal polygons with the same grid orthogonal polygon,
+which is created as well. See \cgalFigureRef{figureOgonsGenerator} for an example of output.
+Note that these polygons have a similar structure, i.e., they have the same relative order of their edges. 
+
+\cgalExample{Generator/random_orthogonal_polygons1.cpp}
+
+\cgalFigureBegin{figureOgonsGenerator,ogons.png}
+An example of output of the program that generates two orthogonal polygons from the same grid ogon.
+\cgalFigureEnd
+
 \section GeneratorDesign Design and Implementation History
 
 Lutz Kettner coded generators in 2D and 3D
@@ -281,6 +323,8 @@ and then \f$a_{i+1}−a_i\f$, for \f$i = 1,\ldots,N\f$ becomes its
 barycentric coordinates with respect to the simplex.
 
 Maxime Gimemo introduced the random generators on 2D and 3D triangle meshes.
+
+Catarina Lobo Ferreira and Ana Paula Tom&aacute;s developed and implemented the generators of (grid) orthogonal polygons and some subclasses. The algorithms are based on the Inflate-Paste method (\cgalCite{tb-qtlsa-04}, \cgalCite{f-acagp-16}), which can generate grid orthogonal polygons with a given number of vertices. Tailored versions of the Inflate-Paste method were implemented as well, to create particular subclasses of grid orthogonal polygons. Orthogonal polygons are obtained from grid ogons by sliding their edges, in such a way that the order defined by a planar sweep is kept.
 
 */ 
 } /* namespace CGAL */

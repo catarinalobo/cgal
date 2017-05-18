@@ -21,5 +21,8 @@
 \example Generator/random_points_in_tetrahedral_mesh_3.cpp
 \example Generator/random_points_in_triangles_2.cpp
 \example Generator/random_points_in_triangles_3.cpp
-
+\example Generator/random_orthogonal_polygons1.cpp
+\example Generator/random_orthogonal_polygons2.cpp
+\example Generator/random_thin_grid_ogons.cpp
+\example Generator/random_column_convex_ogons.cpp
 */
